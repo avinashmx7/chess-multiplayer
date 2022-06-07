@@ -10,6 +10,8 @@ namespace Chess.Scripts.GameScene.Tiles {
             YIndex = yIndex;
             TileName = $"{RowIndex[xIndex]}{yIndex}";
             Transform = gameObj.transform;
+            _tileSpriteRenderer = gameObj.GetComponent<SpriteRenderer>();
+            SetIdle();
         }
         
 
@@ -18,5 +20,14 @@ namespace Chess.Scripts.GameScene.Tiles {
         internal int XIndex { get; private set; }
         internal int YIndex { get; private set; }
         internal string TileName { get; private set; }
+        private readonly SpriteRenderer _tileSpriteRenderer;
+
+        internal void SetHighlighted() {
+            _tileSpriteRenderer.color = Color.blue;
+        }
+
+        internal void SetIdle() {
+            _tileSpriteRenderer.color = Color.clear;
+        }
     }
 }

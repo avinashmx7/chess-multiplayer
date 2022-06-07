@@ -1,14 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+using Chess.Scripts.GameScene.Players.Interfaces;
 using UnityEngine;
 
 namespace Chess.Scripts.GameScene {
-
     public class GameHandler : MonoBehaviour {
-        // Start is called before the first frame update
+        internal static GameHandler Instance { get; private set; }
+
+        private void Awake() {
+            Instance = this;
+        }
+
         private void Start() { }
 
-        // Update is called once per frame
-        private void Update() { }
+        public void OnPlayerSelected(GameObject playerGameObj) {
+            playerGameObj.GetComponent<IPlayer>().PrintName();
+        }
+
+        private void OnDestroy() {
+            Instance = null;
+        }
     }
 }

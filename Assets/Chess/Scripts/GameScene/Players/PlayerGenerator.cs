@@ -25,6 +25,7 @@ namespace Chess.Scripts.GameScene.Players {
                     var playerToSpawn = !onlyPawns ? whitePieces.Find(whitePiece => whitePiece.name.Contains(PlayerPositions[xIndex])) : pawn;
                     var playerGameObj = Instantiate(playerToSpawn, tile.Transform.position, Quaternion.identity);
                     playerGameObj.transform.parent = whitePlayersParentTransform;
+                    playerGameObj.AddComponent<PlayerTouchHandler>();
                 }
 
                 onlyPawns = true;
@@ -41,6 +42,7 @@ namespace Chess.Scripts.GameScene.Players {
                     var playerToSpawn = !onlyPawns ? blackPieces.Find(whitePiece => whitePiece.name.Contains(PlayerPositions[xIndex])) : pawn;
                     var playerGameObj = Instantiate(playerToSpawn, tile.Transform.position, Quaternion.identity);
                     playerGameObj.transform.parent = blackPlayersParentTransform;
+                    playerGameObj.AddComponent<PlayerTouchHandler>();
                 }
 
                 onlyPawns = true;

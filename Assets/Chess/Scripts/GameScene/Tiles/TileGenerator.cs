@@ -16,12 +16,15 @@ namespace Chess.Scripts.GameScene.Tiles {
 
         private void GenerateTiles() {
             for (var yIndex = 0; yIndex < GridSize; yIndex++) {
+                
+                //Creating empty parent game object for each row.
                 var rowTransform = new GameObject($"Row_{yIndex + 1}") {
                     transform = {
                         parent = transform
                     }
                 }.transform;
 
+                
                 for (var xIndex = 0; xIndex < GridSize; xIndex++) {
                     var xPos = InitialX + _offsetX * xIndex;
                     var yPos = InitialY + _offsetY * yIndex;
