@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Chess.Scripts.GameScene.Players.Interfaces;
 using Chess.Scripts.GameScene.Tiles;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Chess.Scripts.GameScene.Players {
     public class PlayerGenerator : MonoBehaviour {
         [SerializeField] private List<GameObject> whitePieces, blackPieces;
-        private readonly string[] PlayerPositions = {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"};
+        private readonly string[] _playerPositions = {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook"};
         private const string Pawn = "Pawn";
 
         private void Start() {
@@ -22,9 +22,15 @@ namespace Chess.Scripts.GameScene.Players {
             for (var yIndex = 0; yIndex < 2; yIndex++) {
                 for (var xIndex = 0; xIndex < 8; xIndex++) {
                     var tile = TilesHandler.GetTileByIndex(xIndex, yIndex);
-                    var playerToSpawn = !onlyPawns ? whitePieces.Find(whitePiece => whitePiece.name.Contains(PlayerPositions[xIndex])) : pawn;
+                    var playerToSpawn = !onlyPawns ? whitePieces.Find(whitePiece => whitePiece.name.Contains(_playerPositions[xIndex])) : pawn;
+
                     var playerGameObj = Instantiate(playerToSpawn, tile.Transform.position, Quaternion.identity);
                     playerGameObj.transform.parent = whitePlayersParentTransform;
+
+                    var player = playerGameObj.GetComponent<Player>();
+                    player.UpdateCurrentTile(tile);
+                    player.SetPlayerType(PlayerType.White);
+
                     playerGameObj.AddComponent<PlayerTouchHandler>();
                 }
 
@@ -34,14 +40,19 @@ namespace Chess.Scripts.GameScene.Players {
 
             onlyPawns = false;
             pawn = null;
-            
+
             var blackPlayersParentTransform = new GameObject("BlackPlayers").transform;
             for (var yIndex = 7; yIndex >= 6; yIndex--) {
                 for (var xIndex = 0; xIndex < 8; xIndex++) {
                     var tile = TilesHandler.GetTileByIndex(xIndex, yIndex);
-                    var playerToSpawn = !onlyPawns ? blackPieces.Find(whitePiece => whitePiece.name.Contains(PlayerPositions[xIndex])) : pawn;
+                    var playerToSpawn = !onlyPawns ? blackPieces.Find(blackPiece => blackPiece.name.Contains(_playerPositions[xIndex])) : pawn;
                     var playerGameObj = Instantiate(playerToSpawn, tile.Transform.position, Quaternion.identity);
                     playerGameObj.transform.parent = blackPlayersParentTransform;
+
+                    var player = playerGameObj.GetComponent<Player>();
+                    player.UpdateCurrentTile(tile);
+                    player.SetPlayerType(PlayerType.Black);
+
                     playerGameObj.AddComponent<PlayerTouchHandler>();
                 }
 

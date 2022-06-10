@@ -1,18 +1,15 @@
 using Chess.Scripts.GameScene.Players.Interfaces;
+using Chess.Scripts.GameScene.Tiles;
 using UnityEngine;
 
 namespace Chess.Scripts.GameScene.Players {
-    public class QueenHandler : MonoBehaviour,IPlayer {
-        public void PrintName() {
+    public class QueenHandler : Player {
+        internal override void PrintName() {
             Debug.Log("I'm Queen!");
         }
 
-        public void GetPossibleTiles() {
-            throw new System.NotImplementedException();
-        }
-
-        public void MoveToTile() {
-            throw new System.NotImplementedException();
+        internal override void GetPossibleTiles() {
+            
         }
     }
 }

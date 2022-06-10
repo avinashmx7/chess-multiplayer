@@ -20,9 +20,27 @@ namespace Chess.Scripts.GameScene.Tiles {
             return null;
         }
 
+        internal static Tile GetTileByGameObject(GameObject tileGameObj) {
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var tile in ChessTiles) {
+                if (tile.GameObj == tileGameObj) {
+                    return tile;
+                }
+            }
+
+            return null;
+        }
+
+        internal static void DeselectAllTiles() {
+            foreach (var tile in ChessTiles) {
+                tile.SetIdle();
+            }
+        }
+
+
         private static bool ValidateIndex(int indexValue) {
             // ReSharper disable once MergeIntoPattern
-            if (indexValue >= 0 && indexValue <= 8) return true;
+            if (indexValue >= 0 && indexValue < 8) return true;
             Debug.LogError($"Invalid X index value = {indexValue}");
             return false;
         }
