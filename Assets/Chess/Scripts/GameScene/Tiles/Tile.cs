@@ -1,7 +1,9 @@
-using Chess.Scripts.GameScene.Players.Interfaces;
+using System;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 using UnityEngine;
 
 namespace Chess.Scripts.GameScene.Tiles {
+    [Serializable]
     public class Tile {
         private static readonly char[] RowIndex = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
         internal GameObject GameObj { get; private set; }

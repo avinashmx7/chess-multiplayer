@@ -25,6 +25,8 @@
 # JetBrains cache directory
 .idea/
 
+*.json
+
 # Gradle cache directory
 .gradle/
 

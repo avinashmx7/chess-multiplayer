@@ -10,13 +10,35 @@ namespace Chess.Scripts.GameScene.Tiles {
             }
         }
 
+        internal static void PrintTilesTable() {
+            var tableContents = string.Empty;
+            for (var j = ChessTiles.GetLength(1) - 1; j >= 0; j--) {
+                for (var i = 0; i < ChessTiles.GetLength(0); i++) {
+                    var occupiedPlayer = ChessTiles[i, j].OccupiedPlayer;
+                    var playerName = "<color=\"red\">X</color>";
+                    if (occupiedPlayer != null) {
+                        playerName = "" + occupiedPlayer.name.Split('_')[1][0];
+                        if (occupiedPlayer.name[0] == 'B') {
+                            playerName = $"<color=\"black\">{playerName}</color>";
+                        }
+                    }
+
+                    tableContents += playerName + " ";
+                }
+
+                tableContents += "\n";
+            }
+
+            Debug.Log(tableContents);
+        }
+
         internal static Tile GetTileByIndex(int xIndex, int yIndex) {
             // ReSharper disable once LoopCanBeConvertedToQuery
             if (ValidateIndex(xIndex) && ValidateIndex(yIndex)) {
                 return ChessTiles[xIndex, yIndex];
             }
 
-            Debug.LogError("Invalid index value.");
+            //Debug.LogError("Invalid index value.");
             return null;
         }
 
@@ -40,9 +62,7 @@ namespace Chess.Scripts.GameScene.Tiles {
 
         private static bool ValidateIndex(int indexValue) {
             // ReSharper disable once MergeIntoPattern
-            if (indexValue >= 0 && indexValue < 8) return true;
-            Debug.LogError($"Invalid X index value = {indexValue}");
-            return false;
+            return indexValue >= 0 && indexValue < 8;
         }
     }
 }
