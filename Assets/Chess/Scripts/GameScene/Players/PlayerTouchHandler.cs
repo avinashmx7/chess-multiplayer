@@ -1,8 +1,7 @@
-using System;
-using Chess.Scripts.GameScene.Players.BasePlayer;
-using Chess.Scripts.GameScene.Tiles;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Chess.Scripts.GameScene.Tiles;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 
 namespace Chess.Scripts.GameScene.Players {
     public class PlayerTouchHandler : MonoBehaviour, IPointerClickHandler {

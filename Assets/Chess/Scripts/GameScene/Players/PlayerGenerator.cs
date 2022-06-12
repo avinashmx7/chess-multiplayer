@@ -1,6 +1,6 @@
-using Chess.Scripts.GameScene.Players.BasePlayer;
-using Chess.Scripts.GameScene.Tiles;
 using UnityEngine;
+using Chess.Scripts.GameScene.Tiles;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 
 
 namespace Chess.Scripts.GameScene.Players {
@@ -12,6 +12,11 @@ namespace Chess.Scripts.GameScene.Players {
             Invoke(nameof(SpawnPlayers), 1f);
         }
 
+        /// <summary>
+        /// Function to spawn player when game begins.
+        /// White player - master or host player who creates the room.
+        /// Black player - second player who joins the room.
+        /// </summary>
         internal void SpawnPlayers() {
             var onlyPawns = false;
             string pawn = null;

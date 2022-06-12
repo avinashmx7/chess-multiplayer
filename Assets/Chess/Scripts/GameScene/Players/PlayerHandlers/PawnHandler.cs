@@ -1,7 +1,6 @@
-using System;
-using Chess.Scripts.GameScene.Players.BasePlayer;
-using Chess.Scripts.GameScene.Tiles;
 using UnityEngine;
+using Chess.Scripts.GameScene.Tiles;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 
 namespace Chess.Scripts.GameScene.Players {
     public class PawnHandler : Player {
@@ -12,10 +11,16 @@ namespace Chess.Scripts.GameScene.Players {
             IsFirstTime = true;
         }
 
+        //For debugging.
         internal override void PrintName() {
             Debug.Log($"I'm {PlayerType} Pawn!");
         }
 
+        /// <summary>
+        /// Find possible move for pawn.
+        /// First time pawn can move 2 tiles.
+        /// After first only 1 tile at a time.
+        /// </summary>
         internal override void FindPossibleMove() {
             var isFirstStepPossible = false;
             //Single step

@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
-using Chess.Scripts.GameScene.Tiles;
 using JetBrains.Annotations;
+using Chess.Scripts.GameScene.Tiles;
 using MonoBehaviour = Photon.MonoBehaviour;
 
 namespace Chess.Scripts.GameScene.Players.BasePlayer {
@@ -13,15 +12,26 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
     public abstract class Player : MonoBehaviour, IPunObservable {
         protected Tile CurrentTile { get; private set; }
         internal PlayerType PlayerType { get; private set; }
-        internal abstract void PrintName();
-        internal abstract void FindPossibleMove();
-        private const string Black = "Black";
 
         protected virtual void Awake() {
             GetComponent<Collider2D>().enabled = photonView.isMine;
-            PlayerType = gameObject.name.Contains(Black) ? PlayerType.Black : PlayerType.White;
+            PlayerType = gameObject.name.Contains("Black") ? PlayerType.Black : PlayerType.White;
         }
 
+        #region Abstract functions
+
+        internal abstract void PrintName();
+        internal abstract void FindPossibleMove();
+
+        #endregion
+
+
+        #region Tile functions & calculations
+
+        /// <summary>
+        /// Updates current tile of player
+        /// </summary>
+        /// <param name="currentTile">Tile to set</param>
         internal void UpdateCurrentTile(Tile currentTile) {
             if (CurrentTile != null) {
                 CurrentTile.OccupiedPlayer = null;
@@ -31,15 +41,27 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
             CurrentTile.OccupiedPlayer = this;
         }
 
+        /// <summary>
+        /// Finds recursive tiles in given direction.
+        /// </summary>
+        /// <param name="tileIndexX">Current tile X index</param>
+        /// <param name="tileIndexY">Current tile Y index</param>
+        /// <param name="directionX">Direction X index</param>
+        /// <param name="directionY">Direction Y index</param>
         protected static void FindRecursiveTiles(int tileIndexX, int tileIndexY, int directionX, int directionY) {
             var tile = TilesHandler.GetTileByIndex(tileIndexX + directionX, tileIndexY + directionY);
-            if (IsPossibleTile(tile)) {
+            if (ValidateTile(tile)) {
                 // ReSharper disable once TailRecursiveCall
                 FindRecursiveTiles(tile.XIndex, tile.YIndex, directionX, directionY);
             }
         }
 
-        protected static bool IsPossibleTile(Tile tile) {
+        /// <summary>
+        /// Validates tiles
+        /// </summary>
+        /// <param name="tile">Tile to validate</param>
+        /// <returns>Returns bool, whether user can go further.</returns>
+        protected static bool ValidateTile(Tile tile) {
             if (tile == null) return false;
             if (tile.OccupiedPlayer == null) {
                 tile.SetHighlighted();
@@ -50,6 +72,9 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
             tile.SetHighlighted();
             return false; // Cannot go further.
         }
+
+        #endregion
+
 
         #region Photon related methods.
 
@@ -67,16 +92,21 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
             }
         }
 
+        /// <summary>
+        /// Pun RPC function to set parent of player.
+        /// </summary>
         [PunRPC]
         [UsedImplicitly]
         internal void SetParent() {
             const string whitePlayers = "WhitePlayers";
             const string blackPlayers = "BlackPlayers";
             transform.parent = PlayerType == PlayerType.White ? GameObject.Find(whitePlayers).transform : GameObject.Find(blackPlayers).transform;
-
             transform.rotation = PlayerType == PlayerType.White ? Quaternion.Euler(0f, 0f, photonView.isMine ? 0f : 180f) : Quaternion.Euler(0f, 0f, photonView.isMine ? 180f : 0f);
         }
 
+        /// <summary>
+        /// Pun RPC function to destroy player.
+        /// </summary>
         [PunRPC]
         [UsedImplicitly]
         internal void DestroyPlayer() {

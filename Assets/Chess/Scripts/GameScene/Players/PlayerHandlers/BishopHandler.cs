@@ -4,7 +4,8 @@ using Chess.Scripts.GameScene.Players.BasePlayer;
 namespace Chess.Scripts.GameScene.Players {
     public class BishopHandler : Player {
         private readonly int[,] _possibleMoves = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-
+        
+        //For debugging.
         internal override void PrintName() {
             Debug.Log($"I'm {PlayerType} Bishop!");
         }

@@ -1,6 +1,6 @@
 using System;
-using Chess.Scripts.GameScene.Players.BasePlayer;
 using UnityEngine;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 
 namespace Chess.Scripts.GameScene.Tiles {
     [Serializable]
@@ -16,7 +16,6 @@ namespace Chess.Scripts.GameScene.Tiles {
         private readonly GameObject _indicatorGameObj;
         private readonly Collider2D _tileCollider;
 
-
         public Tile(GameObject gameObj, int xIndex, int yIndex) {
             GameObj = gameObj;
             XIndex = xIndex;
@@ -28,14 +27,20 @@ namespace Chess.Scripts.GameScene.Tiles {
             SetIdle();
         }
 
-        internal void SetHighlighted() {
-            _indicatorGameObj.SetActive(true);
-            _tileCollider.enabled = true;
-        }
-
+        /// <summary>
+        /// Sets the tile as idle. Disables the highlight game object.
+        /// </summary>
         internal void SetIdle() {
             _indicatorGameObj.SetActive(false);
             _tileCollider.enabled = false;
+        }
+
+        /// <summary>
+        /// Sets the tile highlighted. Enables the highlight game object.
+        /// </summary>
+        internal void SetHighlighted() {
+            _indicatorGameObj.SetActive(true);
+            _tileCollider.enabled = true;
         }
     }
 }

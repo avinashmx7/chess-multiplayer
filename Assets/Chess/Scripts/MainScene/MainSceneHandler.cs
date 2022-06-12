@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Linq.Expressions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MainSceneHandler : MonoBehaviour {
     [SerializeField] private TMP_InputField nameInputField, roomNameInputField;
@@ -25,10 +23,10 @@ public class MainSceneHandler : MonoBehaviour {
         PhotonNetwork.logLevel = PhotonLogLevel.Informational;
 
 #if UNITY_EDITOR
-        nameInputField.text = "Avinash";
+        nameInputField.text = "Player 1";
         roomNameInputField.text = "room_xyz";
 #else
-        nameInputField.text = "Jeba";
+        nameInputField.text = "Player 2";
         roomNameInputField.text = "room_xyz";
 #endif
     }
@@ -93,7 +91,7 @@ public class MainSceneHandler : MonoBehaviour {
         }
     }
 
-    private void StartGame() {
+    private static void StartGame() {
         PhotonNetwork.LoadLevel(1);
     }
 

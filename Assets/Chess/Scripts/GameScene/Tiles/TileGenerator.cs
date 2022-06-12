@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Chess.Scripts.GameScene.Tiles {
@@ -14,9 +13,11 @@ namespace Chess.Scripts.GameScene.Tiles {
             GenerateTiles();
         }
 
+        /// <summary>
+        /// Function to generate tile of chess at start of the game.
+        /// </summary>
         private void GenerateTiles() {
             for (var yIndex = 0; yIndex < GridSize; yIndex++) {
-                
                 //Creating empty parent game object for each row.
                 var rowTransform = new GameObject($"Row_{yIndex + 1}") {
                     transform = {
@@ -24,16 +25,16 @@ namespace Chess.Scripts.GameScene.Tiles {
                     }
                 }.transform;
 
-                
+
                 for (var xIndex = 0; xIndex < GridSize; xIndex++) {
                     var xPos = InitialX + _offsetX * xIndex;
                     var yPos = InitialY + _offsetY * yIndex;
                     var tileGameObj = Instantiate(tilePrefab, new Vector2(xPos, yPos), Quaternion.identity);
                     tileGameObj.transform.parent = rowTransform;
-                    
+
                     var tile = new Tile(tileGameObj, xIndex, yIndex);
                     TilesHandler.SetTile(tile);
-                    
+
                     tileGameObj.name = $"Tile_{tile.TileName}";
                 }
             }
