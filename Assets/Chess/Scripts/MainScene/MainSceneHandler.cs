@@ -10,16 +10,17 @@ public class MainSceneHandler : MonoBehaviour {
     [SerializeField] private Button joinRoomButton, startGameButton;
     [SerializeField] private TextMeshProUGUI statusText;
     private const string ConnectingMessage = "Connecting to server...";
-    private const string ConnectedMessage = "Connected to server";
-    private const string JoiningLobby = "Joining lobby...";
+    private const string ConnectedMessage = "<color=\"green\">Connected to server</color>";
+    private const string JoiningRoom = "Joining room...";
     private const string OnePlayerMissing = "Need 1 more player";
-    private const string InvalidName = "Invalid player name";
-    private const string InvalidRoomName = "Invalid room name";
-    private const string OnReady = "Please start the game.";
-    private const string WaitForStartGame = "Please wait until game starts";
+    private const string InvalidName = "<color=\"red\">Invalid player name</color>";
+    private const string InvalidRoomName = "<color=\"red\">Invalid room name</color>";
+    private const string OnReady = "<color=\"green\">Please start the game</color>";
+    private const string WaitForStartGame = "<color=\"green\">Waiting for host to start game</color>";
 
     private void Awake() {
         Application.runInBackground = true;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         PhotonNetwork.automaticallySyncScene = true;
         PhotonNetwork.logLevel = PhotonLogLevel.Informational;
 
@@ -36,7 +37,7 @@ public class MainSceneHandler : MonoBehaviour {
         PlayerPrefs.DeleteAll();
         SetUIInteractable(false);
         startGameButton.gameObject.SetActive(false);
-        joinRoomButton.onClick.AddListener(JoinLobby);
+        joinRoomButton.onClick.AddListener(JoinRoom);
 
         statusText.text = ConnectingMessage;
         StartCoroutine(ConnectToServer());
@@ -49,8 +50,7 @@ public class MainSceneHandler : MonoBehaviour {
         SetUIInteractable(true);
     }
 
-    private void JoinLobby() {
-        SetUIInteractable(false);
+    private void JoinRoom() {
         var playerName = nameInputField.text;
         var roomName = roomNameInputField.text;
 
@@ -64,12 +64,12 @@ public class MainSceneHandler : MonoBehaviour {
             return;
         }
 
-        statusText.text = JoiningLobby;
-        StartCoroutine(CreateOrJoinLobby(playerName, roomName));
+        SetUIInteractable(false);
+        statusText.text = JoiningRoom;
+        StartCoroutine(CreateOrJoinRoom(playerName, roomName));
     }
 
-    private IEnumerator CreateOrJoinLobby(string playerName, string roomName) {
-        //Creating or joining lobby
+    private IEnumerator CreateOrJoinRoom(string playerName, string roomName) {
         PhotonNetwork.playerName = playerName;
         var roomOptions = new RoomOptions {MaxPlayers = 2};
         var typedLobby = new TypedLobby(roomName, LobbyType.Default);
@@ -101,5 +101,10 @@ public class MainSceneHandler : MonoBehaviour {
         nameInputField.interactable = value;
         roomNameInputField.interactable = value;
         joinRoomButton.interactable = value;
+    }
+
+    private void OnApplicationQuit() {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
     }
 }

@@ -33,7 +33,6 @@ namespace Chess.Scripts.GameScene.Players {
                 }
             }
 
-
             //Check for diagonal kill
             var leftDiagonalTile = TilesHandler.GetTileByIndex(CurrentTile.XIndex + 1, CurrentTile.YIndex + 1 * GetPlayerDirectionValue());
             var rightDiagonalTile = TilesHandler.GetTileByIndex(CurrentTile.XIndex - 1, CurrentTile.YIndex + 1 * GetPlayerDirectionValue());

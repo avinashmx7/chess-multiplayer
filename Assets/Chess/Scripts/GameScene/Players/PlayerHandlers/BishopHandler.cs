@@ -1,6 +1,5 @@
 using UnityEngine;
 using Chess.Scripts.GameScene.Players.BasePlayer;
-using Chess.Scripts.GameScene.Tiles;
 
 namespace Chess.Scripts.GameScene.Players {
     public class BishopHandler : Player {

@@ -15,9 +15,11 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
         internal PlayerType PlayerType { get; private set; }
         internal abstract void PrintName();
         internal abstract void FindPossibleMove();
+        private const string Black = "Black";
 
         protected virtual void Awake() {
-            PlayerType = gameObject.name.Contains("Black") ? PlayerType.Black : PlayerType.White;
+            GetComponent<Collider2D>().enabled = photonView.isMine;
+            PlayerType = gameObject.name.Contains(Black) ? PlayerType.Black : PlayerType.White;
         }
 
         internal void UpdateCurrentTile(Tile currentTile) {
@@ -67,9 +69,24 @@ namespace Chess.Scripts.GameScene.Players.BasePlayer {
 
         [PunRPC]
         [UsedImplicitly]
+        internal void SetParent() {
+            const string whitePlayers = "WhitePlayers";
+            const string blackPlayers = "BlackPlayers";
+            transform.parent = PlayerType == PlayerType.White ? GameObject.Find(whitePlayers).transform : GameObject.Find(blackPlayers).transform;
+
+            transform.rotation = PlayerType == PlayerType.White ? Quaternion.Euler(0f, 0f, photonView.isMine ? 0f : 180f) : Quaternion.Euler(0f, 0f, photonView.isMine ? 180f : 0f);
+        }
+
+        [PunRPC]
+        [UsedImplicitly]
         internal void DestroyPlayer() {
             if (!photonView.isMine) return;
             CurrentTile.OccupiedPlayer = null;
+            if (gameObject.name.Contains("King")) {
+                Debug.Log("You lose");
+                GameHandler.Instance.NotifyGameOver(GameHandler.Instance.GetOppositePlayerType());
+            }
+
             PhotonNetwork.Destroy(gameObject);
         }
 

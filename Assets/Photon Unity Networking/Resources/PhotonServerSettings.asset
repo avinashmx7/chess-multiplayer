@@ -45,4 +45,6 @@ MonoBehaviour:
   - TaggedPlayer
   - ChangePlayerTurn
   - DestroyPlayer
+  - SetParent
+  - GameOver
   DisableAutoOpenWizard: 1

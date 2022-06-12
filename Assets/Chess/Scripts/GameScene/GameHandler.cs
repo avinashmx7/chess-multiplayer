@@ -1,31 +1,40 @@
-using System;
-using Chess.Scripts.GameScene.Players;
-using Chess.Scripts.GameScene.Players.BasePlayer;
-using Chess.Scripts.GameScene.Tiles;
-using DG.Tweening;
 using TMPro;
+using DG.Tweening;
 using UnityEngine;
+using Chess.Scripts.GameScene.Tiles;
+using Button = UnityEngine.UI.Button;
+using Chess.Scripts.GameScene.Players;
 using MonoBehaviour = Photon.MonoBehaviour;
+using Chess.Scripts.GameScene.Players.BasePlayer;
 
 namespace Chess.Scripts.GameScene {
     public class GameHandler : MonoBehaviour, IPunObservable {
         [SerializeField] private TextMeshProUGUI gameStatus;
-        [SerializeField] private GameObject touchBlockPanel;
+        [SerializeField] private GameObject touchBlockPanel, gameOverPanel;
         internal static GameHandler Instance { get; private set; }
 
+        private Camera _mainCamera;
         private GameObject _currentSelectedPlayer;
         private PlayerType _clientPlayerType, _currentTurnPlayer = PlayerType.White;
 
-        private const string YourTurn = "Your Turn";
-        private const string OpponentsTurn = "Opponents Turn";
+        private const string YourTurn = "<color=\"green\">Your Turn</color>";
+        private const string OpponentsTurn = "<color=\"yellow\">Opponents Turn</color>";
+        private const string YouWin = "<color=\"green\">You Win!</color>";
+        private const string YouLose = "<color=\"red\">You Lose!</color>";
         private const float MaxAnimDuration = 1.5f;
 
         private void Awake() {
             Instance = this;
+            _mainCamera = Camera.main;
+            gameOverPanel.SetActive(false);
         }
 
         internal void SetClientPlayerType(PlayerType playerType) {
             _clientPlayerType = playerType;
+            if (_clientPlayerType == PlayerType.Black) {
+                _mainCamera.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+            }
+
             UpdateGameStatus();
         }
 
@@ -74,10 +83,24 @@ namespace Chess.Scripts.GameScene {
 
         #endregion
 
+        internal void NotifyGameOver(PlayerType winnerPlayerType) {
+            photonView.RPC(nameof(GameOver), PhotonTargets.All, winnerPlayerType);
+        }
+
         [PunRPC]
         private void ChangePlayerTurn() {
             _currentTurnPlayer = _currentTurnPlayer == PlayerType.White ? PlayerType.Black : PlayerType.White;
             UpdateGameStatus();
+        }
+
+        [PunRPC]
+        private void GameOver(PlayerType winnerPlayerTypeIndex) {
+            gameOverPanel.SetActive(true);
+            gameOverPanel.transform.Find("WinStatusText").GetComponent<TextMeshProUGUI>().text = _clientPlayerType == winnerPlayerTypeIndex ? YouWin : YouLose;
+            gameOverPanel.transform.Find("ExitButton").GetComponent<Button>().onClick.AddListener(() => {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel(0);
+            });
         }
 
         internal PlayerType GetCurrentTurnPlayerType() {
@@ -94,6 +117,11 @@ namespace Chess.Scripts.GameScene {
 
         private void OnDestroy() {
             Instance = null;
+        }
+
+        private void OnApplicationQuit() {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
         }
     }
 }

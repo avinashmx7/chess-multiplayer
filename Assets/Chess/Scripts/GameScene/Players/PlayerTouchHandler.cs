@@ -13,7 +13,6 @@ namespace Chess.Scripts.GameScene.Players {
         }
 
         public void OnPointerClick(PointerEventData eventData) {
-            Debug.Log("touched.." + _playerType);
             if (_playerType != GameHandler.Instance.GetCurrentTurnPlayerType()) return;
             GameHandler.Instance.OnPlayerSelected(gameObject);
             TilesHandler.PrintTilesTable();
